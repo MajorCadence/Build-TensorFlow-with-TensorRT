@@ -26,13 +26,12 @@ docker run --rm -it build_TF /bin/bash
 ./build_tf.sh
 ```
 The `build_tf.sh` script executes inside the docker image to build TensorFlow. Edit this if you want to change something about the build configuration. You will need to rebuild the docker image if you make changes.
-5) Export the built wheel:
 
+5) Export the built wheel:
 ```
 docker cp build_TF:/output ./
 ```
-
-Check the wheel:
+6) Check the wheel:
 ```
 pip install <your built wheel file>
 import tensorflow as tf
