@@ -1,6 +1,6 @@
 # Build-TensorFlow-with-TensorRT
 
-This repository contains helper Dockerfiles and build scripts to produce TensorFlow binaries built with NVIDIA TensorRT support for specific CUDA and cuDNN combinations.
+This repository contains helper Dockerfiles and build scripts to produce TensorFlow python wheels built **with NVIDIA TensorRT** support for specific Python, CUDA, and cuDNN combinations. The TensorRT I opted to use is the latest offered by NVIDIA that is still compatible with TensorFlow (Version 8.6.1)
 
 Prerequisites
 - Linux host with recent Docker installed (no GPU is needed to build)
@@ -9,27 +9,36 @@ Prerequisites
 
 Usage
 
-1) Choose the configuration directory that matches the CUDA/cuDNN/TFRT combination you want. Example:
+1) Choose the configuration directory that matches the TensorFlow/Python/CUDA/cuDNN/ combination you want. Example:
+```
+cd 2.16.2/tf-cuda12.1-cudnn8.9-TRT-8.6.1/
+```
+2) Build the docker image:
+```
+docker build -t build_TF -f Dockerfile .
+```
+3) Enter the docker image:
+```
+docker run --rm -it build_TF /bin/bash
+```
+4) Start the TensorFlow build:
+```
+./build_tf.sh
+```
+The `build_tf.sh` script executes inside the docker image to build TensorFlow. Edit this if you want to change something about the build configuration. You will need to rebuild the docker image if you make changes.
+5) Export the built wheel:
 
 ```
-cd tf-cuda12.4-cudnn9.1-TRT-8.6.1
+docker cp build_TF:/output ./
 ```
 
-2) Build the image:
-
+Check the wheel:
 ```
-docker build -t tf-trt:cuda12.4 -f Dockerfile .
-```
-The `build_tf.sh` script executes inside the docker image to build TensorFlow. Edit this if you want to change something about the configuration.
-
-3) Export the built wheel:
-
-```
-docker cp tf-trt:cuda12.4:/output ./
-```
-
-```
-python -c "import tensorflow as tf; print(tf.__version__); print('CUDA:', tf.test.is_built_with_cuda()); print('GPU count:', len(tf.config.list_physical_devices('GPU')))")
+pip install <your built wheel file>
+import tensorflow as tf
+print(tf.__version__)
+print(tf.sysconfig.get_build_info())
+print(tf.config.list_physical_devices('GPU'))
 ```
 
 Customization
@@ -39,9 +48,9 @@ Customization
 Troubleshooting
 - If Docker build fails with CUDA or driver errors, ensure your host NVIDIA driver is compatible with the CUDA runtime used by the image.
 - Out-of-memory errors: increase Docker build resources or swap; building TensorFlow can be memory intensive.
-- If TensorRT symbols are missing at runtime, verify that your runtime environment has the same TensorRT version as used during linking.
+- If TensorRT symbols are missing at runtime (`TF-TRT Warning: Could not find TensorRT`), run `python test-tf.py` and check your CUDA and cuDNN versions. If they aren't found, then install them. If you see any 'not found' errors in loading .so libraries, make sure you have them in your $PATH.
 
-Contributing
-- Add a new folder following the existing naming pattern for additional CUDA/cuDNN/TRT combinations and include a `Dockerfile` and `build_tf.sh`.
+Contributing configurations
+- Add a new folder following the existing naming pattern for additional Python/TF/CUDA/cuDNN/TRT combinations and include a `Dockerfile` and `build_tf.sh`.
 
 
