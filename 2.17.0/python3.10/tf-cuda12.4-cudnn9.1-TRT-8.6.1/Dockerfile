@@ -33,7 +33,7 @@ RUN dnf -y groupinstall "Development Tools" && \
     dnf clean all
 
 
-RUN wget https://github.com/bazelbuild/bazel/releases/download/6.1.2/bazel-6.1.2-linux-x86_64 \
+RUN wget https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64 \
     -O /usr/local/bin/bazel && \
     chmod +x /usr/local/bin/bazel
 

@@ -25,7 +25,7 @@ docker build -t build_tf -f Dockerfile .
 ```
 3) Enter the docker image:
 ```
-docker run --rm -it build_tf /bin/bash
+docker run --name TFBUILD -it build_tf /bin/bash
 ```
 4) Start the TensorFlow build:
 ```
@@ -35,7 +35,7 @@ The `build_tf.sh` script executes inside the docker image to build TensorFlow. E
 
 5) Export the built wheel:
 ```
-docker cp build_tf:/output ./
+docker cp TFBUILD:/output ./
 ```
 6) Check the wheel:
 ```
