@@ -38,6 +38,7 @@ bazel build \
   --copt=-march=native \
   //tensorflow/tools/pip_package:wheel
 
-./bazel-bin/tensorflow/tools/pip_package/build_pip_package /output
+mkdir /output
+cp ./bazel-bin/tensorflow/tools/pip_package/wheel_house/*.whl /output/
 
 echo "Build complete."

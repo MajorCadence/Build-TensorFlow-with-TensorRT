@@ -61,7 +61,7 @@ RUN wget https://developer.nvidia.com/downloads/compute/machine-learning/tensorr
 
 RUN git clone https://github.com/NixOS/patchelf.git
 WORKDIR /tmp/patchelf
-RUN ./bootstrap.sh && ./configure && make && make install
+RUN ./bootstrap.sh && ./configure && make && make install && ln -s /usr/local/bin/patchelf /usr/bin/patchelf
 WORKDIR /tmp
 RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.40.tar.xz && \
 	tar -xf binutils-2.40.tar.xz && mkdir /tmp/binutils-build
