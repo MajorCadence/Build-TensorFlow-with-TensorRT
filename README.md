@@ -21,11 +21,11 @@ cd 2.16.2/tf-cuda12.1-cudnn8.9-TRT-8.6.1/
 ```
 2) Build the docker image:
 ```
-docker build -t build_TF -f Dockerfile .
+docker build -t build_tf -f Dockerfile .
 ```
 3) Enter the docker image:
 ```
-docker run --rm -it build_TF /bin/bash
+docker run --rm -it build_tf /bin/bash
 ```
 4) Start the TensorFlow build:
 ```
@@ -35,7 +35,7 @@ The `build_tf.sh` script executes inside the docker image to build TensorFlow. E
 
 5) Export the built wheel:
 ```
-docker cp build_TF:/output ./
+docker cp build_tf:/output ./
 ```
 6) Check the wheel:
 ```
@@ -49,6 +49,7 @@ print(tf.config.list_physical_devices('GPU'))
 **Customization**
 - To change build flags or additional dependencies, edit the `Dockerfile` and `build_tf.sh` in the chosen directory.
 - Add or change Bazel flags in the build steps to tune performance or enable/disable features.
+- These builds are configured for compute capability 8.6. To change this for your GPU, set the environment variable in `build_tf.sh`. NVIDIA has a chart of the corresponding compute capability to set for each GPU.
 
 **Troubleshooting**
 

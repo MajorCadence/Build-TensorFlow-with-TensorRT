@@ -39,8 +39,6 @@ WORKDIR /tensorflow
 RUN git clone https://github.com/tensorflow/tensorflow.git . && \
     git checkout ${TF_VERSION}
 
-COPY build_tf.sh /tensorflow/build_tf.sh
-RUN chmod +x /tensorflow/build_tf.sh
 
 WORKDIR /root
 
@@ -66,3 +64,6 @@ RUN ../binutils-2.40/configure --prefix=/opt/binutils-2.40 && make -j$(nproc) &&
 
 ENV PATH="/opt/binutils-2.40/bin:${PATH}"
 WORKDIR /tensorflow
+
+COPY build_tf.sh /tensorflow/build_tf.sh
+RUN chmod +x /tensorflow/build_tf.sh
