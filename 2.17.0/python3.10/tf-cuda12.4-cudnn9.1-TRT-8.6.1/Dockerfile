@@ -1,5 +1,5 @@
 FROM nvidia/cuda:12.4.1-cudnn-devel-rockylinux9
-ENV TF_VERSION=v2.16.2
+ENV TF_VERSION=v2.17.0
 
 
 RUN dnf -y groupinstall "Development Tools" && \
