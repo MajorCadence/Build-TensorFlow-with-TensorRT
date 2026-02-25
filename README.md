@@ -7,6 +7,7 @@ This project was born out of the work I did in trying to get convert keras model
 **This is not feature complete nor intended to be.** Contributions are welcome. ***You are on your own trying to fix issues.*** Considering that I fixed most of mine with ChatGPT, it's not too hard. 
 
 The TensorRT I opted to use is the latest offered by NVIDIA that is still compatible with TensorFlow ([Version 8.6.1](https://developer.nvidia.com/nvidia-tensorrt-8x-download))
+TensorRT versions > 9 would require manual patching. Help wanted with that!
 
 **Prerequisites**
 - Linux host with recent Docker installed (no GPU is needed to build)

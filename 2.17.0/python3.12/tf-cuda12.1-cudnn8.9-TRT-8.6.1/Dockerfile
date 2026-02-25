@@ -1,5 +1,6 @@
-FROM nvidia/cuda:12.4.1-cudnn-devel-rockylinux9
-ENV TF_VERSION=v2.16.2
+FROM nvidia/cuda:12.1.1-cudnn8-devel-rockylinux9
+
+ENV TF_VERSION=v2.17.0
 
 
 RUN dnf -y groupinstall "Development Tools" && \
@@ -26,11 +27,14 @@ RUN dnf -y groupinstall "Development Tools" && \
         openssl-devel \
         tk-devel \
         libffi-devel \
-        xz-devel && \
+        xz-devel \ 
+        gcc-toolset-12 \
+        gcc-toolset-12-gcc \
+        gcc-toolset-12-gcc-c++ && \
     dnf clean all
 
 
-RUN wget https://github.com/bazelbuild/bazel/releases/download/6.1.2/bazel-6.1.2-linux-x86_64 \
+RUN wget https://github.com/bazelbuild/bazel/releases/download/6.5.0/bazel-6.5.0-linux-x86_64 \
     -O /usr/local/bin/bazel && \
     chmod +x /usr/local/bin/bazel
 
@@ -46,7 +50,7 @@ RUN curl -fsSL https://pyenv.run | bash
 ENV HOME="/root"
 ENV PYENV_ROOT="${HOME}/.pyenv"
 ENV PATH="${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:${PATH}"
-RUN eval "$(pyenv init - bash)" && eval "$(pyenv virtualenv-init -)" && pyenv install 3.10 --verbose && pyenv virtualenv 3.10 tf-build && pyenv global tf-build && pyenv rehash
+RUN eval "$(pyenv init - bash)" && eval "$(pyenv virtualenv-init -)" && pyenv install 3.12 --verbose && pyenv virtualenv 3.12 tf-build && pyenv global tf-build && pyenv rehash
 RUN python -m pip install --upgrade pip setuptools wheel numpy
 
 WORKDIR /tmp
@@ -55,7 +59,7 @@ RUN wget https://developer.nvidia.com/downloads/compute/machine-learning/tensorr
 
 RUN git clone https://github.com/NixOS/patchelf.git
 WORKDIR /tmp/patchelf
-RUN ./bootstrap.sh && ./configure && make && make install
+RUN ./bootstrap.sh && ./configure && make && make install && ln -s /usr/local/bin/patchelf /usr/bin/patchelf
 WORKDIR /tmp
 RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.40.tar.xz && \
 	tar -xf binutils-2.40.tar.xz && mkdir /tmp/binutils-build

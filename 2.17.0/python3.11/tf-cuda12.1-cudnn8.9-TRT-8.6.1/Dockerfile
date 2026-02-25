@@ -1,4 +1,5 @@
-FROM nvidia/cuda:12.4.1-cudnn-devel-rockylinux9
+FROM nvidia/cuda:12.1.1-cudnn8-devel-rockylinux9
+
 ENV TF_VERSION=v2.17.0
 
 
@@ -26,7 +27,7 @@ RUN dnf -y groupinstall "Development Tools" && \
         openssl-devel \
         tk-devel \
         libffi-devel \
-        xz-devel \
+        xz-devel \ 
         gcc-toolset-12 \
         gcc-toolset-12-gcc \
         gcc-toolset-12-gcc-c++ && \
@@ -43,14 +44,13 @@ RUN git clone https://github.com/tensorflow/tensorflow.git . && \
     git checkout ${TF_VERSION}
 
 
-
 WORKDIR /root
 
 RUN curl -fsSL https://pyenv.run | bash
 ENV HOME="/root"
 ENV PYENV_ROOT="${HOME}/.pyenv"
 ENV PATH="${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:${PATH}"
-RUN eval "$(pyenv init - bash)" && eval "$(pyenv virtualenv-init -)" && pyenv install 3.10 --verbose && pyenv virtualenv 3.10 tf-build && pyenv global tf-build && pyenv rehash
+RUN eval "$(pyenv init - bash)" && eval "$(pyenv virtualenv-init -)" && pyenv install 3.11 --verbose && pyenv virtualenv 3.11 tf-build && pyenv global tf-build && pyenv rehash
 RUN python -m pip install --upgrade pip setuptools wheel numpy
 
 WORKDIR /tmp
