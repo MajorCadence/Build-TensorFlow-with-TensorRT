@@ -2,7 +2,7 @@
 
 This repository contains helper Dockerfiles and build scripts to produce TensorFlow python wheels built **with NVIDIA TensorRT** support for specific Python, CUDA, and cuDNN combinations. 
 
-This project was born out of the work I did in trying to get convert keras models to TensorRT models on an HPC running Rocky Linux 9. (hence why the docker images are all Rocky Linux 9). I initially went with Ubuntu images, but the wheels they produced were not compatible with the GLIBC runtime of the HPC. This HPC system is the only system I have tested this project with, so it may well be that they don't work for some other systems. Smilarly, there is no ARM support, although NVIDIA Ubuntu arm64 containers do exist, so it shouldn't be too hard to add support for ARM (e.g. the Jetson).
+This project was born out of the work I did in trying to get convert keras models to TensorRT models on an HPC running Rocky Linux 9. (hence why the docker images are all Rocky Linux 9). I initially went with Ubuntu images, but the wheels they produced were not compatible with the GLIBC runtime of the HPC. This HPC system is the only system I have tested this project with, so it may well be that they don't work for some other systems. Smilarly, there is no ARM support (e.g. Jetson) right now, although I will be working on that!
 
 **This is not feature complete nor intended to be.** Contributions are welcome. ***You are on your own trying to fix issues.*** Considering that I fixed most of mine with ChatGPT, it's not too hard. 
 
@@ -55,7 +55,7 @@ print(tf.config.list_physical_devices('GPU'))
 **Troubleshooting**
 
 - If Docker build fails with CUDA or driver errors, ensure your host NVIDIA driver is compatible with the CUDA runtime used by the image.
-- Out-of-memory errors: increase Docker build resources or swap; building TensorFlow can be memory intensive.
+- Out-of-memory errors: increase Docker build resources or swap; building TensorFlow can be memory intensive. Try adding `--jobs=x` to bazel, where x is the number of cores to use when building; this dramatically reduces memory usage.
 - If TensorRT symbols are missing at runtime (`TF-TRT Warning: Could not find TensorRT`), run `python test-tf.py` and check your CUDA and cuDNN versions. If they aren't found, then install them. If you see any 'not found' errors in loading .so libraries, make sure you have them in your `$LD_LIBRARY_PATH`. 
 - *Unlike* running `pip install tensorflow[and-cuda]`, which bundles CUDA and cuDNN internally, these wheels *do not include CUDA or cuDNN libraries*, and **those must be installed from NVIDIA.** (This is often already the case with CUDA, but you may be missing cuDNN libraries)
 - It goes without saying that you also have to download TensorRT libraries as well. Make sure they are the same as the ones you built TensorFlow against. They must be in your `$LD_LIBRARY_PATH`.
